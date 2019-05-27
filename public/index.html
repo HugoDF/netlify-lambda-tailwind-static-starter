@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>Netlify Lambda Tailwind Static Starter</title>
+  <meta name="description" content="Netlify Lambda Tailwind Static Starter">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <meta name="theme-color" content="#f56565">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+  <div class="container mx-auto max-w-xl py-10">
+    <h1 class="font-semibold my-5 text-xl">Netlify Lambda Tailwind Static Starter demo</h1>
+
+    <p class="mb-2">
+      There's a lambda generating random emoji 👍 at
+      <a
+        class="text-blue-500 hover:text-blue-700 underline"
+        href="/.netlify/functions/emoji">
+        /.netlify/functions/emoji
+      </a>
+    </p>
+    <p class="mb-2">
+      This page is just HTML with inline scripts,
+      there's a function that intercepts form submits and
+      sends them using <code>fetch</code> instead.
+    </p>
+    <p class="mb-2">
+      There's also a helper to get field values using their name,
+      <a
+        class="text-blue-500 hover:text-blue-700 underline"
+        href="https://github.com/HugoDF/netlify-lambda-tailwind-static-starter/blob/fc936bd76f201c90ade459a9ab73bf19fdab6aec/public/index.html#L65">
+        see <code>getFieldValue(form, fieldName)</code>
+        on GitHub</a>.
+    </p>
+    <p class="mb-2">This is a good starting point for quick Lambda demos, see the <a class="text-blue-500 hover:text-blue-700 underline" href="#development-environment-setup">Development Environment Setup</a> or the GitHub Repository <a class="text-blue-500 hover:text-blue-700 underline" href="https://github.com/HugoDF/netlify-lambda-tailwind-static-starter">github.com/HugoDF/netlify-lambda-tailwind-static-starter</a></p>
+
+    <div class="mx-auto max-w-xs mt-10">
+      <form
+        class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        action="/.netlify/functions/emoji"
+        method="get">
+        <div class="flex items-center justify-between">
+          <button
+            class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit">
+            Try it
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <section class="mt-10">
+      <h2 class="font-medium text-xl">Response:</h2>
+
+      <div class="max-w-sm text-xs">
+        <code>
+          <pre id="response-area">
+          </pre>
+        </code>
+      </div>
+    </section>
+
+    <section class="border-t border-solid border-gray-500 py-10 mt-10">
+
+      <h3 id="development-environment-setup" class="text-lg font-semibold mb-4">Development environment setup</h3>
+
+      <h4 class="font-semibold mb-2">A Yarn/npm scripts-based workflow.</h4>
+      <p class="mb-2">
+        The following scripts are available:
+      </p>
+      <ul class="pl-8 list-disc">
+        <li class="mb-1">
+          <code>yarn start</code>:
+          start the Lambda(s) and serving the static directory using
+          <a class="text-blue-500 hover:text-blue-700 underline" href="https://www.netlify.com/products/dev/">
+            Netlify Dev
+          </a>.
+
+          <strong>Important:</strong> before <code>start</code>, <code>yarn build:tw</code> runs.
+        </li>
+        <li class="mb-1"><code>yarn build:tw</code>: build the full set of Tailwind CSS utilities (useful for development), make sure to check what your site looks will look like live using <code>yarn build:css</code></li>
+        <li class="mb-1"><code>yarn build</code>: run netlify-lambda build + Tailwind CSS production build (removes unused classes using PurgeCSS)</li>
+        <li class="mb-1"><code>yarn build:css</code>: Tailwind CSS production build (removes unused classes using PurgeCSS)</li>
+        <li class="mb-1"><code>yarn lint</code> and <code>yarn format</code>: runs XO, the "JavaScript linter with great defaults" (see <a class="text-blue-500 hover:text-blue-700 underline" href="https://github.com/xojs/xo#readme">github.com/xojs/xo</a>) with or without the <code>--fix</code> flag respectively</li>
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      function getFieldValue(form, field) {
+        return form[field].value
+      }
+      const form = document.querySelector('form');
+      const responseArea = document.querySelector('#response-area');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const url = form.action;
+        const verb = (form.method || 'post').toUpperCase();
+        fetch(url, {
+          method: verb,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then(function (res) {
+          if(res.ok) {
+            return res.json();
+          }
+          throw new Error('Network response was not ok.');
+        }).then(function(json) {
+          responseArea.innerText = JSON.stringify(json, null, 2);
+        }).catch(function (error) {
+          responseArea.innerText = error.message
+        })
+      })
+    })()
+  </script>
+</body>
+
+</html>
