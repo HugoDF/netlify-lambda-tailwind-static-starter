@@ -2,6 +2,9 @@
 
 > A starter project with Netlify Lambda, Tailwind CSS and static pages.
 
+<!-- Markdown snippet -->
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/HugoDF/netlify-lambda-tailwind-static-starter)
+
 There's a lambda generating random emoji 👍 at [./src/lambda/emoji.js](./src/lambda/emoji.js)
 
 The index page is just HTML with inline scripts.
